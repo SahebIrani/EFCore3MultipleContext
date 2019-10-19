@@ -39,7 +39,7 @@ namespace Demo
 
             services.AddHttpContextAccessor();
 
-            services.TryAddScoped<ILogService, LogService>();
+            services.TryAddTransient<ILogService, LogService>();
 
             //services.AddEntityFrameworkSqlServer();
 

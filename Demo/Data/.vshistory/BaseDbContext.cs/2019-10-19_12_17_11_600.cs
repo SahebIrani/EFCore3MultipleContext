@@ -46,7 +46,7 @@ namespace Demo.Data
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
-            string host = _tenantHost;
+
 
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
 namespace Demo
@@ -28,20 +27,18 @@ namespace Demo
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<ApplicationDbContext>(option =>
+            //services.AddEntityFrameworkSqlServer();
+
+            services.AddDbContextPool<ApplicationDbContext>(option =>
                  option.UseInMemoryDatabase(nameof(ApplicationDbContext)));
 
-            services.AddDbContext<LogDbContext>(option =>
+            services.AddDbContextPool<LogDbContext>(option =>
                 option.UseInMemoryDatabase(nameof(LogDbContext)));
 
-            services.AddDbContext<AlphaDbContext>(option =>
+            services.AddDbContextPool<AlphaDbContext>(option =>
                 option.UseInMemoryDatabase(nameof(AlphaDbContext)));
 
-            services.AddHttpContextAccessor();
-
-            services.TryAddScoped<ILogService, LogService>();
-
-            //services.AddEntityFrameworkSqlServer();
+            services.AddScoped<ILogService, LogService>();
 
             //services.AddDbContextPool<ApplicationDbContext>((serviceProvider, optionsBuilder) =>
             //{
@@ -52,12 +49,6 @@ namespace Demo
             //services.AddDbContextPool<LogDbContext>((serviceProvider, optionsBuilder) =>
             //{
             //    optionsBuilder.UseInMemoryDatabase(nameof(LogDbContext));
-            //    optionsBuilder.UseInternalServiceProvider(serviceProvider);
-            //});
-
-            //services.AddDbContextPool<AlphaDbContext>((serviceProvider, optionsBuilder) =>
-            //{
-            //    optionsBuilder.UseInMemoryDatabase(nameof(AlphaDbContext));
             //    optionsBuilder.UseInternalServiceProvider(serviceProvider);
             //});
 

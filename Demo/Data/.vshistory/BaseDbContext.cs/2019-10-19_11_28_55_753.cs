@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 using Demo.Models;
 using Demo.Services;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Demo.Data
 {
@@ -37,19 +35,9 @@ namespace Demo.Data
 
     public class BaseDbContext<T> : IdentityDbContext where T : IdentityDbContext
     {
-        public BaseDbContext(DbContextOptions<T> options, IHttpContextAccessor accessor) : base(options)
-            => _tenantHost = accessor.HttpContext.Request.Host.Value;
-
-        private string _tenantHost;
+        public BaseDbContext(DbContextOptions<T> options) : base(options) { }
 
         public DbSet<Person> People { get; set; }
-
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
-        {
-            string host = _tenantHost;
-
-            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -59,7 +47,8 @@ namespace Demo.Data
 
     public class ApplicationDbContext : BaseDbContext<ApplicationDbContext>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor accessor) : base(options, accessor)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
         }
 
@@ -71,13 +60,21 @@ namespace Demo.Data
 
     public class LogDbContext : BaseDbContext<LogDbContext>
     {
-        public LogDbContext(DbContextOptions<LogDbContext> options, IHttpContextAccessor accessor, ILogService logService) : base(options, accessor)
-            => LogService = logService;
+        public LogDbContext(DbContextOptions<LogDbContext> options)
+            : base(options)
+        {
+        }
 
-        public ILogService LogService { get; }
+        public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            var logService = this.GetService<ILogService>();
+            var people = await logService.PeopleAsync(cancellationToken);
+            return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+
             //var logDbCintext = this.GetService<IServiceProvider>().CreateScope().ServiceProvider.GetRequiredService<LogDbContext>();
             //var scope = this.GetInfrastructure().GetRequiredService<IServiceProvider>();
             //var logDbCintext = scope.CreateScope().ServiceProvider.GetRequiredService<LogDbContext>();
@@ -89,16 +86,11 @@ namespace Demo.Data
             //logDbCintext.SaveChanges();
             //var people = logDbCintext.People.ToList();
 
-            //LogDbContext logDbCintext1 = this.GetService<IServiceProvider>().CreateScope().ServiceProvider.GetRequiredService<LogDbContext>();
-            //LogDbContext logDbCintext2 = this.GetService<IServiceScopeFactory>().CreateScope().ServiceProvider.GetRequiredService<LogDbContext>();
-            //LogDbContext logDbCintext3 = this.GetInfrastructure().GetRequiredService<LogDbContext>();
-            //LogDbContext logDbCintext4 = ((IInfrastructure<IServiceProvider>)this).GetService<LogDbContext>();
+            LogDbContext logDbCintext = this.GetService<LogDbContext>();
+
 
             var logService = this.GetService<ILogService>();
             var people = await logService.PeopleAsync(cancellationToken);
-
-            var res = await People.ToListAsync(cancellationToken);
-            var people0 = await LogService.PeopleAsync(cancellationToken);
 
             return await base.SaveChangesAsync(cancellationToken);
         }

@@ -33,8 +33,8 @@ namespace Demo.Controllers
         public async System.Threading.Tasks.Task<IActionResult> IndexAsync(CancellationToken cancellationToken = default)
         {
             await ApplicationDbContext.People.AddAsync(new Person { Id = 1, FullName = "SinjulMSBH" }, cancellationToken);
-            await ApplicationDbContext.SaveChangesAsync(cancellationToken);
-            var people1 = await ApplicationDbContext.People.ToListAsync(cancellationToken);
+            await AlphaDbContext.SaveChangesAsync(cancellationToken);
+            var people1 = ApplicationDbContext.People.ToListAsync(cancellationToken);
 
             await LogDbContext.People.AddAsync(new Person { Id = 1, FullName = "SinjulMSBH" }, cancellationToken);
             await LogDbContext.People.AddAsync(new Person { Id = 2, FullName = "SinjulMSBH" }, cancellationToken);

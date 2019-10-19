@@ -4,10 +4,8 @@ using Demo.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
 namespace Demo
@@ -28,18 +26,17 @@ namespace Demo
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<ApplicationDbContext>(option =>
-                 option.UseInMemoryDatabase(nameof(ApplicationDbContext)));
 
-            services.AddDbContext<LogDbContext>(option =>
-                option.UseInMemoryDatabase(nameof(LogDbContext)));
+            //services.AddDbContext<ApplicationDbContext>(option =>
+            //     option.UseInMemoryDatabase(nameof(ApplicationDbContext)));
 
-            services.AddDbContext<AlphaDbContext>(option =>
-                option.UseInMemoryDatabase(nameof(AlphaDbContext)));
+            //services.AddDbContext<LogDbContext>(option =>
+            //    option.UseInMemoryDatabase(nameof(LogDbContext)));
 
-            services.AddHttpContextAccessor();
+            //services.AddDbContext<AlphaDbContext>(option =>
+            //    option.UseInMemoryDatabase(nameof(AlphaDbContext)));
 
-            services.TryAddScoped<ILogService, LogService>();
+            services.AddScoped<ILogService, LogService>();
 
             //services.AddEntityFrameworkSqlServer();
 

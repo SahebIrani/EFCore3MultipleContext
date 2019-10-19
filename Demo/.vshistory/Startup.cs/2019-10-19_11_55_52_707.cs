@@ -28,6 +28,8 @@ namespace Demo
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("DefaultConnection")));
 
+            services.TryAddScoped<ILogService, LogService>();
+
             services.AddDbContext<ApplicationDbContext>(option =>
                  option.UseInMemoryDatabase(nameof(ApplicationDbContext)));
 
@@ -36,10 +38,6 @@ namespace Demo
 
             services.AddDbContext<AlphaDbContext>(option =>
                 option.UseInMemoryDatabase(nameof(AlphaDbContext)));
-
-            services.AddHttpContextAccessor();
-
-            services.TryAddScoped<ILogService, LogService>();
 
             //services.AddEntityFrameworkSqlServer();
 

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
 namespace Demo
@@ -28,38 +27,38 @@ namespace Demo
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<ApplicationDbContext>(option =>
-                 option.UseInMemoryDatabase(nameof(ApplicationDbContext)));
 
-            services.AddDbContext<LogDbContext>(option =>
-                option.UseInMemoryDatabase(nameof(LogDbContext)));
+            //services.AddDbContext<ApplicationDbContext>(option =>
+            //     option.UseInMemoryDatabase(nameof(ApplicationDbContext)));
 
-            services.AddDbContext<AlphaDbContext>(option =>
-                option.UseInMemoryDatabase(nameof(AlphaDbContext)));
+            //services.AddDbContext<LogDbContext>(option =>
+            //    option.UseInMemoryDatabase(nameof(LogDbContext)));
 
-            services.AddHttpContextAccessor();
+            //services.AddDbContext<AlphaDbContext>(option =>
+            //    option.UseInMemoryDatabase(nameof(AlphaDbContext)));
 
-            services.TryAddScoped<ILogService, LogService>();
 
-            //services.AddEntityFrameworkSqlServer();
+            services.AddEntityFrameworkSqlServer();
 
-            //services.AddDbContextPool<ApplicationDbContext>((serviceProvider, optionsBuilder) =>
-            //{
-            //    optionsBuilder.UseInMemoryDatabase(nameof(ApplicationDbContext));
-            //    optionsBuilder.UseInternalServiceProvider(serviceProvider);
-            //});
+            services.AddScoped<ILogService, LogService>();
 
-            //services.AddDbContextPool<LogDbContext>((serviceProvider, optionsBuilder) =>
-            //{
-            //    optionsBuilder.UseInMemoryDatabase(nameof(LogDbContext));
-            //    optionsBuilder.UseInternalServiceProvider(serviceProvider);
-            //});
+            services.AddDbContextPool<ApplicationDbContext>((serviceProvider, optionsBuilder) =>
+            {
+                optionsBuilder.UseInMemoryDatabase(nameof(ApplicationDbContext));
+                optionsBuilder.UseInternalServiceProvider(serviceProvider);
+            });
 
-            //services.AddDbContextPool<AlphaDbContext>((serviceProvider, optionsBuilder) =>
-            //{
-            //    optionsBuilder.UseInMemoryDatabase(nameof(AlphaDbContext));
-            //    optionsBuilder.UseInternalServiceProvider(serviceProvider);
-            //});
+            services.AddDbContextPool<LogDbContext>((serviceProvider, optionsBuilder) =>
+            {
+                optionsBuilder.UseInMemoryDatabase(nameof(LogDbContext));
+                optionsBuilder.UseInternalServiceProvider(serviceProvider);
+            });
+
+            services.AddDbContextPool<AlphaDbContext>((serviceProvider, optionsBuilder) =>
+            {
+                optionsBuilder.UseInMemoryDatabase(nameof(AlphaDbContext));
+                optionsBuilder.UseInternalServiceProvider(serviceProvider);
+            });
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();

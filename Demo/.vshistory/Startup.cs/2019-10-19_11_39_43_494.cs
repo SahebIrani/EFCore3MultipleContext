@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
 namespace Demo
@@ -37,9 +36,7 @@ namespace Demo
             services.AddDbContext<AlphaDbContext>(option =>
                 option.UseInMemoryDatabase(nameof(AlphaDbContext)));
 
-            services.AddHttpContextAccessor();
-
-            services.TryAddScoped<ILogService, LogService>();
+            services.AddScoped<ILogService, LogService>();
 
             //services.AddEntityFrameworkSqlServer();
 
