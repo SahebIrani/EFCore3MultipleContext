@@ -41,7 +41,6 @@ namespace Demo
 
             services.TryAddScoped<ILogService, LogService>();
 
-            //services.AddEntityFrameworkInMemoryDatabase();
             //services.AddEntityFrameworkSqlServer();
 
             //services.AddDbContextPool<ApplicationDbContext>((serviceProvider, optionsBuilder) =>
